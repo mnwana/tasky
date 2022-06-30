@@ -1,11 +1,12 @@
-var saveTaskEl = document.querySelector("#save-task");
+var formEl = document.querySelector("#task-form");
 var taskListEl = document.querySelector("#tasks-to-do");
 
 var createTaskHandler = function () {
+  preventDefault();
   var taskItemEl = document.createElement("li");
-  taskItemEl.textContent = window.prompt("Enter a task:");
+  taskItemEl.textContent = document.querySelector("#text-name").textContent;
   taskItemEl.className = "task-item";
   taskListEl.appendChild(taskItemEl);
 };
 
-saveTaskEl.addEventListener("click", createTaskHandler);
+formEl.addEventListener("submit", createTaskHandler);
