@@ -4,6 +4,7 @@ var tasksToDoEl = document.querySelector("#tasks-to-do");
 var taskInProgress = document.querySelector("#tasks-in-progress");
 var tasksCompleted = document.querySelector("#tasks-completed");
 var pageContentEl = document.querySelector("#page-content");
+var tasks = [];
 
 var taskFormHandler = function (event) {
   event.preventDefault();
@@ -31,7 +32,8 @@ var taskFormHandler = function (event) {
   else {
     var taskDataObj = {
       name: taskNameInput,
-      type: taskTypeInput
+      type: taskTypeInput,
+      status: 'to do'
     };
   
     createTaskEl(taskDataObj);
@@ -42,6 +44,14 @@ var taskFormHandler = function (event) {
   var taskSelected = document.querySelector(".task-item[data-task-id='"+taskId+"']");
   taskSelected.querySelector("h3.task-name").textContent=taskName;
   taskSelected.querySelector("span.task-type").textContent=taskType;
+
+  for(var i =0; i <tasks.length; i++){
+    if(parseInt(taskId)===tasks[i].id){
+      tasks[i].name=taskName;
+      tasks[i].type=taskType;
+    }
+  }
+
   formEl.removeAttribute("data-task-id");
   document.querySelector("#save-task").textContent = "Add Task";
  } 
@@ -65,7 +75,8 @@ var createTaskEl = function (taskDataObj) {
 
   var taskActionsEl = createTaskActions(taskIdCounter);
   listItemEl.appendChild(taskActionsEl);
-
+  taskDataObj.id = taskIdCounter;
+  tasks.push(taskDataObj);
   // add list item to list
   tasksToDoEl.appendChild(listItemEl);
   taskIdCounter++;
@@ -114,6 +125,14 @@ var deleteTask = function (taskId) {
     );
     taskSelected.remove();
   }
+
+  var updatedTasks = [];
+  for(var i =0; i<tasks.length; i++){
+    if(!tasks[i].id == parseInt(taskId)){
+      updatedTasks.push(tasks[i]);
+    }
+  }
+  tasks=updatedTasks;
 };
 
 var editTask = function (taskId) {
@@ -149,6 +168,12 @@ var taskStatusChangeHandler = function(event){
     else if (statusValue==="completed"){
       tasksCompleted.appendChild(taskSelected);
     };
+
+  for(var i =0; i<tasks.length; i++){
+    if(tasks[i].id=parseInt(taskId)){
+      tasks[i].status=statusValue;
+    }
+  }
 };
 
 formEl.addEventListener("submit", taskFormHandler);
